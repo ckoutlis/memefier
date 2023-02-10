@@ -150,19 +150,19 @@ if "moff" in datasets:
 
     with open("results/baselines_moff.pickle", "rb") as h:
         baseline = pickle.load(h)
-    
+
     with open("results/memefier_moff.pickle", "rb") as h:
         memefier = pickle.load(h)
 
     acc_df = pd.DataFrame(
-        data=np.full((len(modalities) + 1, 1), np.nan), 
-        index=modalities + ["memefier"], 
-        columns=["acc"]
+        data=np.full((len(modalities) + 1, 1), np.nan),
+        index=modalities + ["memefier"],
+        columns=["acc"],
     )
     f1_df = pd.DataFrame(
-        data=np.full((len(modalities) + 1, 1), np.nan), 
-        index=modalities + ["memefier"], 
-        columns=["f1"]
+        data=np.full((len(modalities) + 1, 1), np.nan),
+        index=modalities + ["memefier"],
+        columns=["f1"],
     )
     for modality in modalities:
         constrained = [r for r in baseline if r["modality"] == modality]
@@ -172,7 +172,7 @@ if "moff" in datasets:
 
         acc_df["acc"][modality] = acc
         f1_df["f1"][modality] = f1
-    
+
     acc_df["acc"]["memefier"] = max([r["test_metrics"]["acc"] for r in memefier])
     f1_df["f1"]["memefier"] = max([r["test_metrics"]["f1"] for r in memefier])
 
