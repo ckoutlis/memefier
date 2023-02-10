@@ -1,9 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
+
 from src.models import ImageOnly, TextOnly, MultiModal
 from src.data import MultiOFF
 from src.utils import evaluate_moff
+
 import time
 import random
 import numpy as np
@@ -210,8 +212,8 @@ for modality in modalities:
                     print(json.dumps(result, indent=4))
                     results.append(result)
 
-                    # with open(savpath, "wb") as h:
-                    #     pickle.dump(results, h, protocol=pickle.HIGHEST_PROTOCOL)
+                    with open(savpath, "wb") as h:
+                        pickle.dump(results, h, protocol=pickle.HIGHEST_PROTOCOL)
 
 # TEST SET EVALUATION OF 3 MODELS: image, text, multi
 print("\nTest set performance:")

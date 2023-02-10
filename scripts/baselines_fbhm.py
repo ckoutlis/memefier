@@ -1,9 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
+from sklearn.metrics import roc_auc_score, accuracy_score
+
 from src.models import ImageOnly, TextOnly, MultiModal
 from src.data import FBHM
-from sklearn.metrics import roc_auc_score, accuracy_score
+
 import time
 import random
 import numpy as np

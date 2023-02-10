@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import math
-import clip
 from torchvision.models import resnet18
+import clip
+
+import math
 
 
 def clip_vis_hook(module, input, output):

@@ -2,16 +2,13 @@ import string
 import json
 import pandas as pd
 import numpy as np
+import random, os
+
 import torch
 from sklearn.metrics import accuracy_score, f1_score
-from textdistance import levenshtein
 
 
 def seed_everything(seed: int):
-    import random, os
-    import numpy as np
-    import torch
-
     random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
     np.random.seed(seed)
@@ -264,41 +261,6 @@ def evaluate_moff_memefier(model, loader, loss1, loss2, loss2_agg, alpha, device
     f1_ = f1_score(y_true, y_pred, average="macro")
 
     return loss_cap, loss_hate, loss_, acc_, f1_
-
-
-def search(handle, descriptions=None, min_sim=0.9):
-    if descriptions is None:
-        descriptions = {}
-    for line in handle:
-        dictionary = json.loads(line)
-        query = dictionary["query"]
-        response = dictionary["response"]["docs"]
-        comment = None
-        if len(response):
-            max_sim = 0.0
-            for r in response:
-                label = r["label"][0].replace("<B>", "").replace("</B>", "").lower()
-                similarity = levenshtein.normalized_similarity(query, label)
-                if (
-                    ("comment" in r)
-                    and (similarity > min_sim)
-                    and (similarity > max_sim)
-                ):
-                    comment = r["comment"][0].replace("<B>", "").replace("</B>", "")
-                    max_sim = similarity
-
-        descriptions[query] = comment
-    return descriptions
-
-
-def set_lr(warmup_lr, warmup_iter, batches, lr, epoch, i, epoch_reduce_lr):
-    return (
-        warmup_lr
-        if epoch * batches + i < warmup_iter
-        else lr
-        if epoch <= epoch_reduce_lr
-        else lr / 10
-    )
 
 
 def loss_function(loss_object, prediction, target, device):
