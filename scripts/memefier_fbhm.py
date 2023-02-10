@@ -5,8 +5,7 @@ from torch.utils.data import DataLoader
 
 from src.data import FBHM
 from src.models import MemeFier
-from src.decoder import loss_function
-from src.utils import seed_everything, experiments
+from src.utils import seed_everything, experiments, loss_function
 
 from sklearn.metrics import accuracy_score, roc_auc_score
 import numpy as np

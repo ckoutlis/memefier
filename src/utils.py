@@ -299,3 +299,15 @@ def set_lr(warmup_lr, warmup_iter, batches, lr, epoch, i, epoch_reduce_lr):
         if epoch <= epoch_reduce_lr
         else lr / 10
     )
+
+
+def loss_function(loss_object, prediction, target, device):
+    return sum(
+        [
+            (
+                loss_object(prediction[:, w, :], target[:, w + 1].to(device))
+                * (target[:, w + 1].to(device) != 0)
+            ).mean()
+            for w in range(prediction.shape[1] - 1)
+        ]
+    ) / (prediction.shape[1] - 1)

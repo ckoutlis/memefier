@@ -5,8 +5,7 @@ from torch.utils.data import DataLoader
 
 from src.data import MultiOFF
 from src.models import MemeFier
-from src.decoder import loss_function
-from src.utils import seed_everything, experiments, evaluate_moff_memefier
+from src.utils import seed_everything, experiments, loss_function, evaluate_moff_memefier
 
 import numpy as np
 import pickle
