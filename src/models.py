@@ -37,8 +37,12 @@ class MemeFier(nn.Module):
         :param d: (int) the model's dimension
         :param enc: (dict) encoder hyperparameters, default {"h": 16, "dff": 2048, "L": 3}
         :param dec: (dict) decoder hyperparameters, default {"d": 64, "h": 4, "dff": 64, "L": 1}
-        :param components:  (str) model components to include, default ''
-                            E: External knowledge, C: Caption, P: Pretrained decoder
+        :param components:  (str) model components to include, default '', options:
+                                E: External knowledge
+                                C: Caption
+                                P: Pretrained decoder
+                                1: Fusion Stage 1
+                                2: Fusion Stage 2
         :param caption_max_len: (int) maximum length of the target captions, default None
         :param caption_vocab_size: (int) size of the captions vocabulary, default None
         :param device: (str) device to use, default 'cuda'
@@ -92,16 +96,17 @@ class MemeFier(nn.Module):
         # Fusion
         self.cls = nn.Embedding(1, d).to(device)
         self.type_embedding = nn.Embedding(4, d).to(device)
-        self.fusion = nn.TransformerEncoder(
-            nn.TransformerEncoderLayer(
-                d_model=d,
-                nhead=enc["h"],
-                dim_feedforward=enc["dff"],
-                dropout=0.5,
-                batch_first=True,
-            ),
-            num_layers=enc["L"],
-        ).to(device)
+        if "2" in components:
+            self.fusion = nn.TransformerEncoder(
+                nn.TransformerEncoderLayer(
+                    d_model=d,
+                    nhead=enc["h"],
+                    dim_feedforward=enc["dff"],
+                    dropout=0.5,
+                    batch_first=True,
+                ),
+                num_layers=enc["L"],
+            ).to(device)
 
         # Classification output
         if isinstance(num_classes, dict):
@@ -207,8 +212,8 @@ class MemeFier(nn.Module):
             )
 
         # Fusion (stage 1)
-        fgi = torch.mul(ogi, ox.unsqueeze(1))
-        fxi = torch.mul(oxi, og.unsqueeze(1))
+        fgi = torch.mul(ogi, ox.unsqueeze(1)) if "1" in self.components else ogi
+        fxi = torch.mul(oxi, og.unsqueeze(1)) if "1" in self.components else oxi
 
         # Fusion (stage 2)
         fusion_input = torch.cat(
@@ -227,7 +232,7 @@ class MemeFier(nn.Module):
                 ),
                 dim=1,
             )
-        fusion_output = self.fusion(fusion_input)
+        fusion_output = self.fusion(fusion_input) if "2" in self.components else fusion_input
 
         # Classification output
         if isinstance(self.num_classes, dict):

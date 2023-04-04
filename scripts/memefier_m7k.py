@@ -23,7 +23,7 @@ seq_len = 23
 seed = 42
 batch_size = 32
 weight_decay = 0.0001
-components = "EC"
+components = "EC12"
 
 tasks = ["a", "b", "c"]
 categories = ["humour", "sarcasm", "offensive", "motivational"]

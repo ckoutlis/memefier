@@ -27,7 +27,7 @@ seq_len = 77
 seed = 42
 batch_size = 32
 weight_decay = 0.0001
-components = "EC"
+components = "EC12"
 
 experiments = experiments()
 total = len(experiments)

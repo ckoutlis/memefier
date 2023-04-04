@@ -4,15 +4,12 @@ from torch.utils.data import DataLoader
 
 from src.data import FBHM
 from src.models import MemeFier
-from src.utils import seed_everything, experiments, loss_function
+from src.utils import seed_everything, loss_function
 
 from sklearn.metrics import accuracy_score, roc_auc_score
 import numpy as np
-import pickle
-import json
 
 datdir = "data/fbhm/"
-savpath = "results/memefier_fbhm.pickle"
 device = "cuda:0"
 workers = 10
 patience = 4
@@ -22,30 +19,17 @@ seq_len = 34
 seed = 42
 batch_size = 32
 weight_decay = 0.0001
-components = "EC12"
 
-experiments = experiments()
-total = len(experiments)
-results = []
-for indx, lr, epochs, alpha, d, enc, dec in experiments:
-    max_auc = max([max(r["metrics"]["auc"]) for r in results]) if results else 0.0
-    config = {
-        "dataset": "fbhm",
-        "seed": seed,
-        "batch_size": batch_size,
-        "weight_decay": weight_decay,
-        "components": components,
-        "indx": indx,
-        "lr": lr,
-        "epochs": epochs,
-        "alpha": alpha,
-        "d": d,
-        "enc": enc,
-        "dec": dec,
-    }
-    print(f"max auc:{max_auc}")
-    print(json.dumps(config, indent=4))
+lr = 0.0001
+epochs = 16
+alpha = 0.2
+d = 1024
+enc = {"h": 16, "dff": 2048, "L": 3}
+dec = {"d": 64, "h": 4, "dff": 64, "L": 1}
 
+for components in ["C12", "E12", "EC2", "EC1"]:
+    print(components)
+    max_auc = 0
     seed_everything(seed)
 
     model = MemeFier(
@@ -126,21 +110,6 @@ for indx, lr, epochs, alpha, d, enc, dec in experiments:
 
             optimizer.step()
 
-            losses.append(loss_.item())
-            if "C" in model.components:
-                l_cap += l_cap_.item()
-            l_hate += l_hate_.item()
-            accs.append(
-                accuracy_score(
-                    labels.cpu().numpy().tolist(),
-                    (torch.sigmoid(hate_pred) > 0.5).cpu().numpy().tolist(),
-                )
-            )
-            print(
-                f"\r[e:{epoch + 1},b:{i + 1}/{len(train_dl)}] loss:({l_cap / len(losses):1.3f},{l_hate / len(losses):1.3f},{sum(losses) / len(losses):1.3f}), acc:{sum(accs) / len(accs):1.3f}",
-                end="",
-            )
-
         model.eval()
         val_loss = 0
         l_cap = 0
@@ -185,17 +154,24 @@ for indx, lr, epochs, alpha, d, enc, dec in experiments:
         metrics["acc"].append(accuracy_score(y_true, y_pred))
         metrics["auc"].append(roc_auc_score(y_true, y_score))
 
-        print(
-            f" || val_loss:({l_cap / len(val_dl):1.3f},{l_hate / len(val_dl):1.3f},{val_loss / len(val_dl):1.3f}), val_acc:{accuracy_score(y_true, y_pred):1.3f}, val_auc:{roc_auc_score(y_true, y_score):1.3f}"
-        )
+        if metrics["auc"][-1] > max_auc:
+            max_auc = metrics["auc"][-1]
 
         if (epoch >= patience) and all(
-            [
-                metrics["auc"][-patience - 1] > metrics["auc"][x]
-                for x in -np.arange(1, patience + 1)
-            ]
+                [
+                    metrics["auc"][-patience - 1] > metrics["auc"][x]
+                    for x in -np.arange(1, patience + 1)
+                ]
         ):
             break
-    results.append({"config": config, "metrics": metrics})
-    with open(savpath, "wb") as h:
-        pickle.dump(results, h, protocol=pickle.HIGHEST_PROTOCOL)
+
+    print(max_auc)
+
+# C12
+# 0.7873439999999999
+# E12
+# 0.7911600000000001
+# EC2
+# 0.728032
+# EC1
+# 0.52
