@@ -232,7 +232,7 @@ class MemeFier(nn.Module):
                 ),
                 dim=1,
             )
-        fusion_output = self.fusion(fusion_input) if "2" in self.components else fusion_input
+        fusion_output = self.fusion(fusion_input) if "2" in self.components else fusion_input.mean(dim=1, keepdims=True)
 
         # Classification output
         if isinstance(self.num_classes, dict):
