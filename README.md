@@ -1,6 +1,6 @@
 # MemeFier: Dual-stage Modality Fusion for Image Meme Classification
 
-Implementation of the corresponding ICMR 2023 paper which is available on arXiv https://arxiv.org/abs/2304.02906.
+Implementation of the corresponding ICMR 2023 paper which is available here https://dl.acm.org/doi/abs/10.1145/3591106.3592254.
 
 ## Abstract
 > Hate speech is a societal problem that has significantly grown through the Internet. New forms of digital content such as image memes have given rise to spread of hate using multimodal means, being far more difficult to analyse and detect compared to the unimodal case. Accurate automatic processing, analysis and understanding of this kind of content will facilitate the endeavor of hindering hate speech proliferation through the digital world. To this end, we propose MemeFier, a deep learning-based architecture for fine-grained classification of Internet image memes, utilizing a dual-stage modality fusion module. The first fusion stage produces feature vectors containing modality alignment information that captures non-trivial connections between the text and image of a meme. The second fusion stage leverages the power of a Transformer encoder to learn inter-modality correlations at the token level and yield an informative representation. Additionally, we consider external knowledge as an additional input, and background image caption supervision as a regularizing component. Extensive experiments on three widely adopted benchmarks, i.e., Facebook Hateful Memes, Memotion7k and MultiOFF, indicate that our approach competes and in some cases surpasses state-of-the-art.
@@ -49,11 +49,12 @@ Performance on MultiOFF in terms of accuracy and F1 score:
 ## Citation
 If you use this code for your research, please cite our paper.
 ```
-@article{koutlis2023memefier,
-  title     = {MemeFier: Dual-stage Modality Fusion for Image Meme Classification},
-  author    = {Koutlis, Christos and Schinas, Manos and Papadopoulos, Symeon},
-  journal   = {arXiv preprint arXiv:2304.02906},
-  year      = {2023},
+@inproceedings{koutlis2023memefier,
+  title={MemeFier: Dual-stage Modality Fusion for Image Meme Classification},
+  author={Koutlis, Christos and Schinas, Manos and Papadopoulos, Symeon},
+  booktitle={Proceedings of the 2023 ACM International Conference on Multimedia Retrieval},
+  pages={586--591},
+  year={2023}
 }
 ```
 
