@@ -7,18 +7,34 @@ Implementation of the corresponding ICMR 2023 paper which is available here http
 
 ![](https://github.com/ckoutlis/memefier/blob/master/docs/fig1.png)
 
+## Environment
+To reproduce the memefier environment run the following:
+```
+conda create -n memefier python=3.9
+conda activate memefier
+conda install pytorch==1.12.0 torchvision==0.13.0 torchaudio==0.12.0 cudatoolkit=11.3 -c pytorch
+pip install pandas matplotlib scikit-learn torchtext==0.13.0 ftfy regex tqdm huggingface-hub transformers boto3 requests sentencepiece sacremoses textdistance nltk git+https://github.com/openai/CLIP.git
+```
+
 ## Datasets
-* [Facebook Hatehul Memes](https://ai.facebook.com/blog/hateful-memes-challenge-and-data-set/ "Title")
-* [Memotion7k](https://www.kaggle.com/datasets/williamscott701/memotion-dataset-7k "Title")
-* [MultiOFF](https://drive.google.com/drive/folders/1hKLOtpVmF45IoBmJPwojgq6XraLtHmV6 "Title")
+Download the following datasets:
+* [Facebook Hatehul Memes](https://ai.facebook.com/blog/hateful-memes-challenge-and-data-set/ "Title") - store it in `data/fbhm` directory
+* [Memotion7k](https://www.kaggle.com/datasets/williamscott701/memotion-dataset-7k "Title") - store it in `data/m7k` directory
+* [MultiOFF](https://drive.google.com/drive/folders/1hKLOtpVmF45IoBmJPwojgq6XraLtHmV6 "Title") - store it in `data/moff` directory
 
 ## Baselines
+The code for the baselines can be found in `src/models.py`, including:
 * (image only) Fine-tuning a pre-trained ResNet18
 * (text only) LSTM based
 * (multi-modal) Combination of the two above
 
+## Train the models
+You can re-run the experiments by running `scripts/<model>_<dataset>.py`, where `model` is one of `{baselines,memefier}` and `dataset` one of `{fbhm,m7k,moff}`. Also, you can re-run the ablation anaysis by running `scripts/ablation.py`.
+
 ## Results
-Performance on Facebokk Hateful Memes in terms of accuracy and AUC:
+Run `scripts/results.py` to display the results reported in the paper.
+
+ Performance on Facebokk Hateful Memes in terms of accuracy and AUC:
 
 | method   | accuracy  | AUC       |
 |----------|-----------|-----------|
