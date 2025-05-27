@@ -19,7 +19,7 @@ pip install pandas matplotlib scikit-learn torchtext==0.13.0 ftfy regex tqdm hug
 ## Datasets
 Download the following datasets:
 * [Facebook Hatehul Memes](https://ai.facebook.com/blog/hateful-memes-challenge-and-data-set/ "Title") - store it in `data/fbhm` directory
-* [Memotion7k](https://www.kaggle.com/datasets/williamscott701/memotion-dataset-7k "Title") - store it in `data/m7k` directory
+* [[Memotion7k *train / val* sets](https://www.kaggle.com/datasets/williamscott701/memotion-dataset-7k "Title")], [[Memotion7k *test* set](https://drive.google.com/drive/folders/13Rz7r6JZ4jmsZ_zceJmL3OsHNqJIaiYN?usp=sharing%20 "Title") provided through [CodaLab](https://competitions.codalab.org/competitions/20629)] - store it in `data/m7k` directory
 * [MultiOFF](https://drive.google.com/drive/folders/1hKLOtpVmF45IoBmJPwojgq6XraLtHmV6 "Title") - store it in `data/moff` directory
 
 ## Baselines
